@@ -1,6 +1,6 @@
 package com.example.cache;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
@@ -16,14 +16,14 @@ public class InMemoryCacheTest {
     public void testWithValueLoader() {
         InMemoryCache<String, String> simpleCache = InMemoryCache.builder().build(s -> UUID.randomUUID().toString());
         simpleCache.put("1", "one");
-        assertEquals(simpleCache.get("1"), "one");
+        assertEquals("one", simpleCache.get("1"));
         simpleCache.put("1", "ONE");
-        assertEquals(simpleCache.get("1"), "ONE");
+        assertEquals("ONE", simpleCache.get("1") );
         simpleCache.put("2", "TWO");
         assertNotNull(simpleCache.get("3")); // from value loader
-        assertEquals(simpleCache.size(), 3);
+        assertEquals(3, simpleCache.size());
         assertNotNull(simpleCache.remove("3"));
-        assertEquals(simpleCache.size(), 2);
+        assertEquals(2, simpleCache.size());
         simpleCache.clear();
     }
     @Test
@@ -40,10 +40,10 @@ public class InMemoryCacheTest {
         simpleCache.put("2", "two");
         simpleCache.put("3", "three");
         simpleCache.put("4", "four");
-        assertEquals(simpleCache.get("1"), "one"); // access the 1st key here
+        assertEquals("one", simpleCache.get("1") ); // access the 1st key here
         simpleCache.put("5", "five");
         assertNull(simpleCache.get("2")); // key 'two' should not be present
-        assertEquals(simpleCache.size(), 4);
+        assertEquals(4, simpleCache.size());
         simpleCache.clear();
     }
 
@@ -62,7 +62,7 @@ public class InMemoryCacheTest {
         simpleCache.put("5", "five");
         Thread.sleep(100);
         assertNull(simpleCache.get("1")); // key 'one' should not be present
-        assertEquals(simpleCache.size(), 4);
+        assertEquals(4, simpleCache.size());
         simpleCache.clear();
     }
 
@@ -93,8 +93,8 @@ public class InMemoryCacheTest {
         Thread.sleep(100);
         simpleCache.put("5", "five");
         Thread.sleep(100);
-        assertEquals(simpleCache.get("1"), "one"); // key 'one' should be present
-        assertEquals(simpleCache.size(), 4);
+        assertEquals("one", simpleCache.get("1")); // key 'one' should be present
+        assertEquals(4, simpleCache.size());
         assertNull(simpleCache.get("2"));
         simpleCache.clear();
     }

@@ -1,8 +1,6 @@
 package com.example.cache.main;
 
-import com.example.cache.Cache;
-import com.example.cache.InMemoryCache;
-import com.example.cache.InMemoryCacheWithLRUEviction;
+import com.example.cache.*;
 
 import java.time.temporal.ChronoUnit;
 import java.util.LinkedHashMap;
@@ -15,84 +13,50 @@ import java.util.UUID;
 public class Main {
     public static void main(String[] args) throws InterruptedException {
 
-//        Cache cache = new InMemoryCacheWithDelayQueue();
-//
-//        cache.add("a", "a", 10L);
-//        cache.add("b", "b", 10L);
-//        cache.add("c", "c", 10L);
-//        cache.add("e", "e", 10L);
-//        cache.add("f", "ff", 10L);
-//
-//        System.out.println(cache.get("a"));
-//        System.out.println(cache.get("b"));
-//        System.out.println(cache.get("c"));
-//        System.out.println(cache.get("e"));
-//        System.out.println(cache.size());
-//        cache.add("d", "12", 10L);
-//
-//        System.out.println(cache.get("f"));
-//Thread.sleep(11L);
-//        System.out.println("###"+cache.get("f"));
+        /* How {@com.example.cache.InMemoryCacheWithDelayQueue} is used */
+        Cache<String, String> simpleCacheWithDelayQueue = new InMemoryCacheWithDelayQueue();
+        simpleCacheWithDelayQueue.put("1", "one");
+        simpleCacheWithDelayQueue.get("1"); // returns "one"
+        simpleCacheWithDelayQueue.remove("3");
+        simpleCacheWithDelayQueue.clear();
 
-//        System.out.println("#########################");
-//
-//        Cache lruCache = new InMemoryCacheWithLRUEviction(4);
-//
-//        lruCache.put("a", "a", 10L);
-//        lruCache.put("b", "b", 10L);
-//        System.out.println(lruCache.get("a"));
-//        lruCache.put("c", "c", 10L);
-//        lruCache.put("e", "e", 10L);
-//        lruCache.put("f", "ff", 10L);
-//
-//        System.out.println(lruCache.get("a"));
-//        System.out.println(lruCache.get("b"));
-//        System.out.println(lruCache.get("c"));
-//        System.out.println(lruCache.get("e"));
-//        System.out.println(lruCache.get("f"));
-//        System.out.println(lruCache.size());
-//        lruCache.put("d", "12", 10L);
-//
-//        System.out.println(lruCache.get("f"));
-//        Thread.sleep(11L);
-//        System.out.println("###"+lruCache.get("f"));
-//
+        /* How {@com.example.cache.InMemoryCacheWithLRUEviction} is used */
+        Cache<String, String> simpleCacheWithLRUEviction = new InMemoryCacheWithLRUEviction();
+        simpleCacheWithLRUEviction.put("1", "one");
+        simpleCacheWithLRUEviction.get("1"); // returns "one"
+        simpleCacheWithLRUEviction.remove("3");
+        simpleCacheWithLRUEviction.clear();
 
-//        System.out.println("#########################");
-//
-//        Cache lruCache = new InMemoryCacheWithLRUMap<String, String >(1L,4);
-//
-//        lruCache.add("a", "a", 1000L);
-//        lruCache.add("b", "b", 10L);
-//        System.out.println(lruCache.get("a"));
-//        lruCache.add("c", "c", 10L);
-//        lruCache.add("e", "e", 10L);
-//        lruCache.add("f", "ff", 10L);
-//
-//        System.out.println(lruCache.get("a"));
-//        System.out.println(lruCache.get("b"));
-//        System.out.println(lruCache.get("c"));
-//        System.out.println(lruCache.get("e"));
-//        System.out.println(lruCache.get("f"));
-//      //  System.out.println(lruCache.size());
-//        lruCache.add("d", "12", 10L);
-//
-//        System.out.println(lruCache.get("f"));
-//        Thread.sleep(11000L);
-//        System.out.println("###"+lruCache.get("f"));
+        /* How {@com.example.cache.InMemoryCacheWithLRUMap} is used */
+        Cache<String, String> simpleCacheWithLRUMap = new InMemoryCacheWithLRUMap();
+        simpleCacheWithLRUMap.put("1", "one");
+        simpleCacheWithLRUMap.get("1"); // returns "one"
+        simpleCacheWithLRUMap.remove("3");
+        simpleCacheWithLRUMap.clear();
+
+        /* How {@com.example.cache.InMemoryCacheWithFIFOEviction} is used */
+        Cache<String, String> simpleCacheWithFIFOEviction = new InMemoryCacheWithFIFOEviction();
+        simpleCacheWithFIFOEviction.put("1", "one");
+        simpleCacheWithFIFOEviction.get("1"); // returns "one"
+        simpleCacheWithFIFOEviction.remove("3");
+        simpleCacheWithFIFOEviction.clear();
+
+        /* How {@com.example.cache.InMemoryCacheWithLFUEviction} is used */
+        Cache<String, String> simpleCacheWithLFUEviction = new InMemoryCacheWithLFUEviction();
+        simpleCacheWithLFUEviction.put("1", "one");
+        simpleCacheWithLFUEviction.get("1"); // returns "one"
+        simpleCacheWithLFUEviction.remove("3");
+        simpleCacheWithLFUEviction.clear();
+
+        /* How {@com.example.cache.InMemoryCache} is used */
         Cache<String, String> simpleCache = InMemoryCache.builder()
                 .initialCapacity(16).maximumSize(100)
                 .expireAfter(200, ChronoUnit.MILLIS)
                 .build(s -> UUID.randomUUID().toString());
-        simpleCache.put("1", "one", 2L);
-
-        System.out.println( simpleCache.get("1")); // returns "one"
-        System.out.println(simpleCache.get("3"));
-        System.out.println("___________________");
-        simpleCache.put("12", "one22");
-        System.out.println("-----------------");
-        System.out.println(simpleCache.get("12"));
+        simpleCache.put("1", "one");
+        simpleCache.get("1"); // returns "one"
         simpleCache.remove("3");
         simpleCache.clear();
+
     }
 }

@@ -23,6 +23,8 @@ public class InMemoryCacheWithFIFOEviction <K, V> implements Cache<K, V>, Serial
     private static final long serialVersionUID = -162114643488955218L;
 
     protected static final int DEFAULT_MAX_SIZE = 100;
+    // in milliseconds
+    private static final int DEFAULT_TTL = 1000;
     private final transient int initialCapacity;
 
     private final LinkedHashMap<K, SoftReference<Object>> cache;
@@ -78,7 +80,7 @@ public class InMemoryCacheWithFIFOEviction <K, V> implements Cache<K, V>, Serial
 
     @Override
     public void put(K key, V value) {
-        // TODO : to be implemented
+        put(key, value, DEFAULT_TTL);
     }
 
     @Override
@@ -96,6 +98,7 @@ public class InMemoryCacheWithFIFOEviction <K, V> implements Cache<K, V>, Serial
         readWriteLock.readLock().lock();
         try {
             return (V) Optional.ofNullable(cache.get(key)).map(SoftReference::get).orElse(null);
+            // need to renew. now for simplicity key is not renewed.
         } finally {
             readWriteLock.readLock().unlock();
         }

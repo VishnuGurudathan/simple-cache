@@ -11,10 +11,16 @@ import java.util.ArrayList;
 public class InMemoryCacheWithLRUMap<K, V> implements Cache<K, V> {
 
     protected static final int DEFAULT_MAX_SIZE = 100;
+    // in milliseconds
+    private static final int DEFAULT_TTL = 1000;
     private final LRUMap cacheMap;
 
+
     public InMemoryCacheWithLRUMap() {
-        this(1L, DEFAULT_MAX_SIZE);
+        this( DEFAULT_MAX_SIZE);
+    }
+    public InMemoryCacheWithLRUMap(int capacity) {
+        this(1L, capacity);
     }
 
     public InMemoryCacheWithLRUMap(final long timerInterval, int capacity) {
@@ -50,7 +56,7 @@ public class InMemoryCacheWithLRUMap<K, V> implements Cache<K, V> {
 
     @Override
     public void put(K key, V value) {
-        // TODO : to be implemented
+        put(key, value, DEFAULT_TTL);
     }
 
     public void add(K key, V value) {
@@ -139,7 +145,7 @@ public class InMemoryCacheWithLRUMap<K, V> implements Cache<K, V> {
 
         protected CacheObject(V value, long ttl) {
             this.value = value;
-            this.timeToLive = ttl * 1000;
+            this.timeToLive = ttl;//* 1000;
         }
     }
 }

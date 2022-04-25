@@ -17,19 +17,34 @@ public class InMemoryCacheWithLFUEviction<K, V> implements Cache<K, V>, Serializ
     private static final long serialVersionUID = -162114643488955218L;
 
     protected static final int DEFAULT_MAX_SIZE = 100;
+    // in milliseconds
+    private static final int DEFAULT_TTL = 1000;
     private final transient int initialCapacity;
 
     private final LinkedHashMap<K, CacheEntry<V>> cache;
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
+    /**
+     * Clean up interval is multiple of 1sec, by default is 1 sec.
+     */
     public InMemoryCacheWithLFUEviction() {
         this(DEFAULT_MAX_SIZE);
     }
 
+    // TODO : validate arguments
+
+    /**
+     * Clean up interval is multiple of 1sec, by default is 1 sec.
+     * @param initialCapacity
+     */
     public InMemoryCacheWithLFUEviction(int initialCapacity) {
         this(1L, initialCapacity);
     }
 
+    /**
+     * Clean up interval is multiple of 1sec
+     * @param initialCapacity
+     */
     public InMemoryCacheWithLFUEviction(final long timerInterval, int initialCapacity) {
 
         this.initialCapacity = initialCapacity;
@@ -70,7 +85,7 @@ public class InMemoryCacheWithLFUEviction<K, V> implements Cache<K, V>, Serializ
                 K entryKeyToBeRemoved = getLFUKey();
                 cache.remove(entryKeyToBeRemoved);
             }
-            CacheEntry entry = new CacheEntry(value, 0);
+            CacheEntry entry = new CacheEntry(value, ttl);
             cache.put(key, entry);
 
         } finally {
@@ -80,7 +95,7 @@ public class InMemoryCacheWithLFUEviction<K, V> implements Cache<K, V>, Serializ
 
     @Override
     public void put(K key, V value) {
-        // TODO : to be implemented
+        put(key, value, DEFAULT_TTL);
     }
 
     @Override
@@ -158,6 +173,7 @@ public class InMemoryCacheWithLFUEviction<K, V> implements Cache<K, V>, Serializ
             deleteKey = new ArrayList<K>((this.cache.size() / 2) + 1);
             for (Map.Entry<K, CacheEntry<V>> entry : this.cache.entrySet()) {
                 c = entry.getValue();
+
                 if (c != null && (now > (c.timeToLive + c.lastAccessed))) {
 
                     deleteKey.add(entry.getKey());
@@ -167,7 +183,6 @@ public class InMemoryCacheWithLFUEviction<K, V> implements Cache<K, V>, Serializ
 
         for (K key : deleteKey) {
             synchronized (cache) {
-
                 this.cache.remove(key);
             }
             Thread.yield();
@@ -188,7 +203,7 @@ public class InMemoryCacheWithLFUEviction<K, V> implements Cache<K, V>, Serializ
 
         protected CacheEntry(V value, int frequency, long ttl) {
             this.value = value;
-            this.timeToLive = ttl * 1000;
+            this.timeToLive = ttl ;//* 1000;
             this.frequency = 0;
         }
     }

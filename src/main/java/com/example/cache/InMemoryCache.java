@@ -16,6 +16,8 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Function;
 
 /**
+ * In-memory LRU cache with ttl.
+ *
  * @author vishnu.g
  */
 public class InMemoryCache<K, V> implements Cache<K, V> {

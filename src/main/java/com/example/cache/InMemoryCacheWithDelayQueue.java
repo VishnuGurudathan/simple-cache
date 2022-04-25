@@ -22,6 +22,7 @@ public class InMemoryCacheWithDelayQueue<K, V> implements Cache<K, V>, Serializa
     private final ConcurrentHashMap<K, SoftReference<Object>> cache = new ConcurrentHashMap<>();
     private final DelayQueue<DelayedCacheObject> cleaningUpQueue = new DelayQueue<>();
     private transient int maxSize;
+    private static final int DEFAULT_TTL = 1000;
 
     public InMemoryCacheWithDelayQueue() {
         Thread cleanerThread = new Thread(() -> {
@@ -55,7 +56,7 @@ public class InMemoryCacheWithDelayQueue<K, V> implements Cache<K, V>, Serializa
 
     @Override
     public void put(K key, V value) {
-        //TODO : to be implemented
+        put(key, value, DEFAULT_TTL);
     }
 
     @Override
